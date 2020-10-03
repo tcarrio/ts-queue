@@ -26,7 +26,7 @@ export class Queue<T> implements IQueue<T> {
      * 
      * @param elements: the elements to add to the queue
      */
-    enqueue(...elements: T[]): void {
+    public enqueue(...elements: T[]): void {
         for (let i = 0; i < elements.length; i++) {
             this.queueMap.set(this.endIndex++, elements[i]);
         }
@@ -35,13 +35,20 @@ export class Queue<T> implements IQueue<T> {
     /**
      * Removes the first item in the queue
      */
-    dequeue(): T | undefined {
+    public dequeue(): T | undefined {
         let value = undefined;
-        if (this.startIndex < this.endIndex) {
-            value = this.queueMap.get(this.startIndex);
-            this.queueMap.delete(this.startIndex++);
+        if (this.size > 0) {
+            value = this._peek();
+            this._deleteFirst();
         }
         return value;
+    }
+
+    /**
+     * Deletes the first element from the queue
+     */
+    private _deleteFirst(): void {
+        this.queueMap.delete(this.startIndex++)
     }
 
     /**
@@ -52,10 +59,30 @@ export class Queue<T> implements IQueue<T> {
     }
 
     /**
+     * Returns the value of the first item in the queue without removing it
+     * 
+     * @returns: the first item in the queue, or null
+     */
+    public peek(): T | undefined {
+        let value = undefined;
+        if (this.size > 0) {
+            value = this._peek();
+        }
+        return value;
+    }
+
+    /**
+     * Unconditionally retrieves the first value stored in the queue
+     */
+    private _peek(): T | undefined {
+        return this.queueMap.get(this.startIndex)
+    }
+
+    /**
      * Using the iterator implementation to avoid mutation of the queue,
      * joins all stored values in their toString methods
      */
-    toString(): string {
+    public toString(): string {
         return [...this].toString();
     }
 
@@ -63,7 +90,7 @@ export class Queue<T> implements IQueue<T> {
      * Using the iterator implementation to avoid mutation of the queue,
      * joins all stored values in their toLocalString methods
      */
-    toLocaleString(): string {
+    public toLocaleString(): string {
         return [...this].toLocaleString();
     }
 
@@ -72,7 +99,7 @@ export class Queue<T> implements IQueue<T> {
      * instead this creates a shallow copy of the values stored in the queue
      * which can be iterated separately.
      */
-    [Symbol.iterator](): Iterator<T> {
+    public [Symbol.iterator](): Iterator<T> {
         const values: T[] = [];
         for (let si = this.startIndex; si < this.endIndex; si++) {
             values.push(this.queueMap.get(si)!);

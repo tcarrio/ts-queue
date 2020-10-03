@@ -68,6 +68,35 @@ describe("Queue tests", () => {
     });
   });
 
+  describe("Peeking", () => {
+    it("should not remove an element by peeking", () => {
+      const queue = new Queue<number>(1, 2, 3);
+      expect(queue.peek()).toEqual(1);
+      expect(queue.peek()).toEqual(1);
+      expect(queue.peek()).toEqual(1);
+    });
+
+    it ("should return undefined when no value stored in queue", () => {
+      const queue = new Queue<any>();
+      expect(queue.peek()).toBeUndefined();
+    })
+
+    it ("should return undefined when nothing is left in queue after dequeueing", () => {
+      const queue = new Queue<number>(1, 2);
+      expect(queue.peek()).toEqual(1);
+      expect(queue.dequeue()).toEqual(1);
+      expect(queue.dequeue()).toEqual(2);
+      expect(queue.dequeue()).toBeUndefined();
+    });
+
+    it("should return undefined before adding items to queue", () => {
+      const queue = new Queue<number>();
+      expect(queue.peek()).toBeUndefined();
+      queue.enqueue(9);
+      expect(queue.peek()).toEqual(9);
+    });
+  })
+
   describe("Miscellanious", () => {
     it("should stringify", () => {
       const list = ["a", "b", "c"];

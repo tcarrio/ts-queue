@@ -18,5 +18,12 @@ export interface IQueue<T> {
      */
     size: number;
 
+    /**
+     * Returns the value of the first item in the queue without removing it
+     * 
+     * @returns: the first item in the queue, or null
+     */
+    peek(): T | undefined;
+
     [Symbol.iterator](): Iterator<T>;
 }
